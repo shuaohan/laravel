@@ -34,12 +34,24 @@ class LoginController extends Controller
         $email=Auth::guard('user')->user()->email;
         $result=DB::table('users')->where('email','=',$email)->get()->toArray()['0'];
         $data=(json_decode(json_encode($result),true));
+        $data['year']= substr($data['birthday'],0,4);
+        $data['month']= substr($data['birthday'],5,2);
+        $data['day']= substr($data['birthday'],8);
+        //dd($data);
 
         return view('frontend.auth.userinfo',$data);
     }
-    public function userinfo()
+    public function userinfo(Request $request)
     {
+        $email=Auth::guard('user')->user()->email;
+       $data['username']=$request->input('username');
+       $data['phone']=$request->input('phone');
+       $data['sex']=$request->input('sex');
+       $data['age']=$request->input('age');
+       $data['birthday']=$request->input('year').'-'.$request->input('month').'-'.$request->input('day');
+       $result=DB::table('users')->where('email','=',$email)->update($data);
 
+        return redirect("/");
     }
     public function logout()
     {

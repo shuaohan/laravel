@@ -27,11 +27,15 @@ class RegisterController extends Controller
         $result=DB::table('users')->where('email',$email)->exists();
         if ($result)
         {
-            return response()->json([
-                'message'=>'邮箱已注册'
-            ]);
+            return redirect()->back()->withErrors(
+                'The Email Has Exist!'
+                );
+           
         }
         else{
+            // $request->validate([
+            //     'passowrd'=>'required'
+            // ])
             DB::table('users')->insert([
                 'username'=>$request->input('username'),
                 'email'=>$email,
